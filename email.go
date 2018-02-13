@@ -34,13 +34,18 @@ type Message struct {
 	Attachments     map[string]*Attachment
 }
 
-func (m *Message) attach(file string, inline bool) error {
+func (m *Message) attach(file, customFileName string, inline bool) error {
 	data, err := ioutil.ReadFile(file)
 	if err != nil {
 		return err
 	}
 
-	_, filename := filepath.Split(file)
+	var filename string
+	if len(customFileName) != 0 {
+		filename = customFileName
+	} else {
+		_, filename = filepath.Split(file)
+	}
 
 	m.Attachments[filename] = &Attachment{
 		Filename: filename,
@@ -62,13 +67,13 @@ func (m *Message) AttachBuffer(filename string, buf []byte, inline bool) error {
 }
 
 // Attach attaches a file.
-func (m *Message) Attach(file string) error {
-	return m.attach(file, false)
+func (m *Message) Attach(file, customFileName string) error {
+	return m.attach(file, customFileName, false)
 }
 
 // Inline includes a file as an inline attachment.
-func (m *Message) Inline(file string) error {
-	return m.attach(file, true)
+func (m *Message) Inline(file, customFileName string) error {
+	return m.attach(file, customFileName, true)
 }
 
 func newMessage(subject string, body string, bodyContentType string) *Message {
