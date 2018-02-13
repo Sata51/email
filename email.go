@@ -67,12 +67,22 @@ func (m *Message) AttachBuffer(filename string, buf []byte, inline bool) error {
 }
 
 // Attach attaches a file.
-func (m *Message) Attach(file, customFileName string) error {
+func (m *Message) Attach(file string) error {
+	return m.attach(file, "", false)
+}
+
+// AttachWithCustomName attaches a file with the given custom file name.
+func (m *Message) AttachWithCustomName(file, customFileName string) error {
 	return m.attach(file, customFileName, false)
 }
 
 // Inline includes a file as an inline attachment.
-func (m *Message) Inline(file, customFileName string) error {
+func (m *Message) Inline(file string) error {
+	return m.attach(file, "", true)
+}
+
+// InlineWithCustomName includes a file as an inline attachement with the given custom file name.
+func (m *Message) InlineWithCustomName(file, customFileName string) error {
 	return m.attach(file, customFileName, true)
 }
 
